@@ -14,6 +14,9 @@ const morgan = require("morgan");
 const compression = require("compression");
 const helmet = require("helmet");
 
+// Variable
+let controllerDir;
+
 // Initialize the app with basic stuff
 module.exports.init = () => {
   // Initialize CORS
@@ -31,6 +34,8 @@ module.exports.init = () => {
 
   // Initialize helmet
   app.use(helmet());
+
+  consola.info("Piston app initialized !");
 };
 
 // Initialize static directory
@@ -41,18 +46,32 @@ module.exports.initStatic = (staticDir = "/public") => {
   consola.info(`Static files directory initialized in : ${staticDir}`);
 };
 
+// Initialize view path
+module.exports.initView = (viewDir = "/views", engine = "ejs") => {
+  app.set("views", path.join(process.cwd(), viewDir));
+
+  app.set("view engine", engine);
+
+  consola.info("Views ready !");
+};
+
+// Initialize the controller dir
+module.exports.initController = (controllerDirectory = "/controller") => {
+  controllerDir = path.join(process.cwd(), controllerDirectory);
+};
+
 // Initialize route file
-module.exports.initRoutes = (routesFile = "/config/routes.js") => {
+module.exports.initRouter = (routesFile = "/config/routes.js") => {
   // Require routes files
   const routes = require(path.join(process.cwd(), routesFile));
 
   // Generate routes
   const { generateRouter } = require("./routes.js");
-  const generatedRouter = generateRouter(routes);
+  const generatedRouter = generateRouter(routes, controllerDir);
 
   // Add route to expresss
   app.use("", generatedRouter);
-  consola.info("Routes generated !");
+  consola.info("Router ready !");
 };
 
 // Start the app

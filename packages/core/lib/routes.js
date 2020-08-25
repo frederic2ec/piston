@@ -1,7 +1,11 @@
+// Basic require
+const path = require("path");
+const consola = require("consola");
+
 // Express require
 const express = require("express");
 
-function generateRouter(routes) {
+function generateRouter(routes, controllerDir) {
   // Initialize express router
   const router = express.Router();
 
@@ -20,11 +24,31 @@ function generateRouter(routes) {
       const nestedGeneratedRoute = generateRouter(controller);
       router.use(routeArray[0], nestedGeneratedRoute);
     } else {
-      // Add route to the router
-      router[routeArray[0]](routeArray[1], function (_, res) {
-        // TODO Call the controller
-        res.send(controller);
-      });
+      // Split the string to get the controller and function names
+      const controllerArray = controller.split("/");
+      // Check if the controller array is 2
+      if (controllerArray.length !== 2) {
+        consola.error("Routes file error : Controller length incorrect");
+        return;
+      }
+      // Try getting the controller file
+      let controllerFile;
+      try {
+        controllerFile = require(path.join(
+          controllerDir,
+          `${controllerArray[0]}.controller.js`
+        ));
+
+        // Add route to the router
+        router[routeArray[0]](
+          routeArray[1],
+          controllerFile[controllerArray[1]]
+        );
+      } catch (e) {
+        router[routeArray[0]](routeArray[1], (_, res) => {
+          res.send("No controller found !");
+        });
+      }
     }
   }
 

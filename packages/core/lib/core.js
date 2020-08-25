@@ -19,7 +19,7 @@ module.exports.initStatic = (staticDir = "/public") => {
 module.exports.start = (port = "3000", host = "127.0.0.1") => {
   // Environment checker
   const nodeEnv = process.env.NODE_ENV || "development";
-  if (nodeEnv !== "production") {
+  if (nodeEnv !== "production" && process.env.PISTON_ENV !== "true") {
     consola.warn(
       `Piston is not running in production mode, it's recommended to use "piston serve"`
     );

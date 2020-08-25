@@ -5,9 +5,12 @@ function main() {
   // Init static folder
   piston.initStatic("public/");
 
+  // Init routes file
+  piston.initRoutes("config/routes.js");
+
   // Start piston
   piston.start();
 }
 
-// Run main and export
+// Export main
 module.exports = main;

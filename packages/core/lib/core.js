@@ -15,6 +15,20 @@ module.exports.initStatic = (staticDir = "/public") => {
   consola.info(`Static files directory initialized in : ${staticDir}`);
 };
 
+// Initialize route file
+module.exports.initRoutes = (routesFile = "/config/routes.js") => {
+  // Require routes files
+  const routes = require(path.join(process.cwd(), routesFile));
+
+  // Generate routes
+  const { generateRouter } = require("./routes.js");
+  const generatedRouter = generateRouter(routes);
+
+  // Add route to expresss
+  app.use("", generatedRouter);
+  consola.info("Routes generated !");
+};
+
 // Start the app
 module.exports.start = (port = "3000", host = "127.0.0.1") => {
   // Environment checker

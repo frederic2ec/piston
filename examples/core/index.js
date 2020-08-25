@@ -2,6 +2,8 @@
 const piston = require("@piston/core");
 
 function main() {
+  // Init piston
+  piston.init();
   // Init static folder
   piston.initStatic("public/");
 

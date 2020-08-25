@@ -7,6 +7,32 @@ const consola = require("consola");
 const express = require("express");
 const app = express();
 
+// Express addons
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const morgan = require("morgan");
+const compression = require("compression");
+const helmet = require("helmet");
+
+// Initialize the app with basic stuff
+module.exports.init = () => {
+  // Initialize CORS
+  app.use(cors());
+
+  // Initialize body parser
+  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.json());
+
+  // Initialize morgan for logging
+  app.use(morgan("dev"));
+
+  // Initialize compression
+  app.use(compression());
+
+  // Initialize helmet
+  app.use(helmet());
+};
+
 // Initialize static directory
 module.exports.initStatic = (staticDir = "/public") => {
   const dir = path.join(process.cwd(), staticDir);

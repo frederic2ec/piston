@@ -9,10 +9,13 @@ function main() {
   piston.initStatic("public/");
 
   // Init view folder
-  piston.initView("views/");
+  piston.initView("views/", "ejs");
 
-  // Init controller folder
-  piston.initController("controllers/");
+  // Init middlwares folder
+  piston.initMiddlewares("middlewares/");
+
+  // Init controllers folder
+  piston.initControllers("controllers/");
 
   // Init routes file
   piston.initRouter("config/routes.js");

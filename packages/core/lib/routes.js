@@ -4,6 +4,7 @@ const consola = require("consola");
 
 // Express require
 const express = require("express");
+const e = require("express");
 
 function generateRouter(routes, controllerDir) {
   // Initialize express router
@@ -14,7 +15,7 @@ function generateRouter(routes, controllerDir) {
     // Split the string in an array
     const routeArray = route.split(/(\s+)/).filter((e) => e.trim().length > 0);
     // Check if the routes array is 2 or less
-    if (routeArray.length > 2) {
+    if (routeArray.length > 2 || routeArray.length < 1) {
       consola.error("Routes file error : Route length incorrect");
       return;
     }
@@ -40,10 +41,20 @@ function generateRouter(routes, controllerDir) {
         ));
 
         // Add route to the router
-        router[routeArray[0]](
-          routeArray[1],
-          controllerFile[controllerArray[1]]
-        );
+        if (typeof controllerFile[controllerArray[1]] === "object") {
+          const middlewares = controllerFile[controllerArray[1]].Middleware;
+
+          router[routeArray[0]](
+            routeArray[1],
+            ...middlewares,
+            controllerFile[controllerArray[1]].View
+          );
+        } else {
+          router[routeArray[0]](
+            routeArray[1],
+            controllerFile[controllerArray[1]]
+          );
+        }
       } catch (e) {
         router[routeArray[0]](routeArray[1], (_, res) => {
           res.send("No controller found !");

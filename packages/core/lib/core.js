@@ -15,7 +15,8 @@ const compression = require("compression");
 const helmet = require("helmet");
 
 // Variable
-let controllerDir;
+let controllersDir;
+let middlewaresDir;
 
 // Initialize the app with basic stuff
 module.exports.init = () => {
@@ -56,8 +57,13 @@ module.exports.initView = (viewDir = "/views", engine = "ejs") => {
 };
 
 // Initialize the controller dir
-module.exports.initController = (controllerDirectory = "/controller") => {
-  controllerDir = path.join(process.cwd(), controllerDirectory);
+module.exports.initControllers = (controllersDirectory = "/controllers") => {
+  controllersDir = path.join(process.cwd(), controllersDirectory);
+};
+
+// Initialize the middleware dir
+module.exports.initMiddlewares = (middlewaresDirectory = "/middlewares") => {
+  middlewaresDir = path.join(process.cwd(), middlewaresDirectory);
 };
 
 // Initialize route file
@@ -67,7 +73,7 @@ module.exports.initRouter = (routesFile = "/config/routes.js") => {
 
   // Generate routes
   const { generateRouter } = require("./routes.js");
-  const generatedRouter = generateRouter(routes, controllerDir);
+  const generatedRouter = generateRouter(routes, controllersDir);
 
   // Add route to expresss
   app.use("", generatedRouter);
@@ -91,4 +97,14 @@ module.exports.start = (port = "3000", host = "127.0.0.1") => {
       `Piston app listening at http://${listenHost}:${listenPort}`
     );
   });
+};
+
+// Middleware
+module.exports.middleware = (middlewareName) => {
+  const { generateMiddleware } = require("./middleware");
+  const generatedMiddleware = generateMiddleware(
+    middlewaresDir,
+    middlewareName
+  );
+  return generatedMiddleware;
 };

@@ -1,0 +1,21 @@
+{
+  "name": "typescript-example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc && npm run copy-asset",
+    "copy-asset": "cp -r src/public dist/public && cp -r src/views dist/views",
+    "dev": "npm run build && cd dist/ && piston serve"
+  },
+  "keywords": [],
+  "author": "",
+  "dependencies": {
+    "@piston/cli": "*",
+    "@piston/core": "*",
+    "@types/node": "^14.6.4",
+    "typescript": "^4.0.2"
+  },
+  "license": "ISC"
+}

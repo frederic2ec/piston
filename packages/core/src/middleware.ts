@@ -1,10 +1,13 @@
 // Basic require
-const path = require("path");
+import * as path from "path";
 const consola = require("consola");
 
-module.exports.generateMiddleware = (middlewaresDir, middlewareName) => {
+export const generateMiddleware = (
+  middlewaresDir: string,
+  middlewareName: string
+): Function | any => {
   // Split the string in an array
-  const middlewareArray = middlewareName.split("/");
+  const middlewareArray: string[] = middlewareName.split("/");
 
   // Check if middleware array length is good
   if (middlewareArray.length > 2 || middlewareArray.length < 1) {
@@ -12,8 +15,8 @@ module.exports.generateMiddleware = (middlewaresDir, middlewareName) => {
     return;
   }
 
-  let middlewareFile;
-  let middlewareFn;
+  let middlewareFile: NodeRequire | any;
+  let middlewareFn: Function | any;
   try {
     middlewareFile = require(path.join(
       middlewaresDir,
@@ -28,7 +31,7 @@ module.exports.generateMiddleware = (middlewaresDir, middlewareName) => {
     }
   } catch (e) {
     // Return an empty middleware if non exist
-    middlewareFn = (_, __, next) => {
+    middlewareFn = (_: any, __: any, next: Function) => {
       next();
     };
   }

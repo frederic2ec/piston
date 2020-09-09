@@ -1,33 +1,32 @@
-"use strict";
-// Base require
-const path = require("path");
+// Base import
+import * as path from "path";
 const consola = require("consola");
 
-// Express require
-const express = require("express");
+// Express import
+import * as express from "express";
 const app = express();
 
-// Express addons
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const morgan = require("morgan");
-const compression = require("compression");
-const helmet = require("helmet");
+// Express extensions
+import * as cors from "cors";
+import * as bodyParser from "body-parser";
+import * as morgan from "morgan";
+import * as compression from "compression";
+import * as helmet from "helmet";
 
-// Variable
-let controllersDir;
-let middlewaresDir;
+// Global variables
+let controllersDir: string;
+let middlewaresDir: string;
 
-// Initialize the app with basic stuff
-module.exports.init = () => {
-  // Initialize CORS
+// Initialze the app
+export const init = () => {
+  // Initialize cors
   app.use(cors());
 
   // Initialize body parser
-  app.use(bodyParser.urlencoded({ extended: false }));
+  app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
-  // Initialize morgan for logging
+  // Intialize morgan for logging
   app.use(morgan("dev"));
 
   // Initialize compression
@@ -36,19 +35,20 @@ module.exports.init = () => {
   // Initialize helmet
   app.use(helmet());
 
-  consola.info("Piston app initialized !");
+  // Consola
+  consola.info("Piston app initialize !");
 };
 
-// Initialize static directory
-module.exports.initStatic = (staticDir = "/public") => {
-  const dir = path.join(process.cwd(), staticDir);
+// Initialize static direction
+export const initStatic = (staticDir = "/public") => {
+  const dir: string = path.join(process.cwd(), staticDir);
   app.use(express.static(dir));
 
   consola.info(`Static files directory initialized in : ${staticDir}`);
 };
 
 // Initialize view path
-module.exports.initView = (viewDir = "/views", engine = "ejs") => {
+export const initView = (viewDir = "/views", engine = "ejs") => {
   app.set("views", path.join(process.cwd(), viewDir));
 
   app.set("view engine", engine);
@@ -57,7 +57,7 @@ module.exports.initView = (viewDir = "/views", engine = "ejs") => {
 };
 
 // Initialize the controller dir
-module.exports.initControllers = (controllersDirectory = "/controllers") => {
+export const initControllers = (controllersDirectory = "/controllers") => {
   controllersDir = path.join(process.cwd(), controllersDirectory);
 };
 
@@ -67,7 +67,7 @@ module.exports.initMiddlewares = (middlewaresDirectory = "/middlewares") => {
 };
 
 // Initialize route file
-module.exports.initRouter = (routesFile = "/config/routes.js") => {
+export const initRouter = (routesFile = "/config/routes.js") => {
   // Require routes files
   const routes = require(path.join(process.cwd(), routesFile));
 
@@ -81,7 +81,7 @@ module.exports.initRouter = (routesFile = "/config/routes.js") => {
 };
 
 // Start the app
-module.exports.start = (port = "3000", host = "127.0.0.1") => {
+export const start = (port = "3000", host = "127.0.0.1") => {
   // Environment checker
   const nodeEnv = process.env.NODE_ENV || "development";
   if (nodeEnv !== "production" && process.env.PISTON_ENV !== "true") {
@@ -90,7 +90,7 @@ module.exports.start = (port = "3000", host = "127.0.0.1") => {
     );
   }
   // Listen app
-  const listenPort = process.env.PORT || port;
+  const listenPort = Number(process.env.PORT || port);
   const listenHost = process.env.HOST || host;
   app.listen(listenPort, listenHost, () => {
     consola.success(
@@ -100,7 +100,7 @@ module.exports.start = (port = "3000", host = "127.0.0.1") => {
 };
 
 // Middleware
-module.exports.middleware = (middlewareName) => {
+export const middleware = (middlewareName: string): Function => {
   const { generateMiddleware } = require("./middleware");
   const generatedMiddleware = generateMiddleware(
     middlewaresDir,

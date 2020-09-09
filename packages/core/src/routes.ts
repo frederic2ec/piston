@@ -1,19 +1,23 @@
 // Basic require
-const path = require("path");
+import * as path from "path";
 const consola = require("consola");
 
 // Express require
-const express = require("express");
-const e = require("express");
+import * as express from "express";
 
-function generateRouter(routes, controllerDir) {
+export const generateRouter = (
+  routes: string | object,
+  controllerDir: string
+): express.Router | any => {
   // Initialize express router
-  const router = express.Router();
+  const router: express.Router | any = express.Router();
 
   // Start looping on each entries
   for (const [route, controller] of Object.entries(routes)) {
     // Split the string in an array
-    const routeArray = route.split(/(\s+)/).filter((e) => e.trim().length > 0);
+    const routeArray: string[] = route
+      .split(/(\s+)/)
+      .filter((e) => e.trim().length > 0);
     // Check if the routes array is 2 or less
     if (routeArray.length > 2 || routeArray.length < 1) {
       consola.error("Routes file error : Route length incorrect");
@@ -22,7 +26,10 @@ function generateRouter(routes, controllerDir) {
     // Detect if the controller is an object
     if (typeof controller === "object") {
       // Generate a new router
-      const nestedGeneratedRoute = generateRouter(controller);
+      const nestedGeneratedRoute: any = generateRouter(
+        controller,
+        controllerDir
+      );
       router.use(routeArray[0], nestedGeneratedRoute);
     } else {
       // Split the string to get the controller and function names
@@ -56,7 +63,7 @@ function generateRouter(routes, controllerDir) {
           );
         }
       } catch (e) {
-        router[routeArray[0]](routeArray[1], (_, res) => {
+        router[routeArray[0]](routeArray[1], (_: any, res: any) => {
           res.send("No controller found !");
         });
       }
@@ -65,6 +72,4 @@ function generateRouter(routes, controllerDir) {
 
   // Return the router
   return router;
-}
-
-module.exports.generateRouter = generateRouter;
+};

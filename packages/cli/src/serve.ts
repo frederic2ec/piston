@@ -13,9 +13,18 @@ export default function (options: any): Function {
   process.env.PISTON_ENV = "true";
 
   // Get app package.json
-  const ajson = require(path.join(process.cwd(), "package.json"));
+  let ajson: any;
+  try {
+    ajson = require(path.join(process.cwd(), "package.json"));
+  } catch {
+    ajson = "";
+  }
   const mainfile = ajson.main || "index.js";
 
   const mainapp = require(path.join(process.cwd(), mainfile));
-  return mainapp();
+  try {
+    return mainapp.default();
+  } catch {
+    return mainapp();
+  }
 }

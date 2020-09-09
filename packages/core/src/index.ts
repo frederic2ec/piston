@@ -62,7 +62,7 @@ export const initControllers = (controllersDirectory = "/controllers") => {
 };
 
 // Initialize the middleware dir
-module.exports.initMiddlewares = (middlewaresDirectory = "/middlewares") => {
+export const initMiddlewares = (middlewaresDirectory = "/middlewares") => {
   middlewaresDir = path.join(process.cwd(), middlewaresDirectory);
 };
 

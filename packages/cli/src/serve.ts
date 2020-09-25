@@ -9,6 +9,9 @@ export default function (options: any): Function {
   if (options.port) {
     process.env.PORT = options.port;
   }
+  if (options.typescript) {
+    process.env.PISTON_TS = "true";
+  }
 
   process.env.PISTON_ENV = "true";
 
@@ -21,10 +24,10 @@ export default function (options: any): Function {
   }
   const mainfile = ajson.main || "index.js";
 
-  const mainapp = require(path.join(process.cwd(), mainfile));
-  try {
-    return mainapp.default();
-  } catch {
-    return mainapp();
+  if (options.typescript) {
+    require("ts-node").register();
+    return require(path.join(process.cwd(), mainfile))();
   }
+
+  return require(path.join(process.cwd(), mainfile))();
 }

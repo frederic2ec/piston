@@ -72,7 +72,7 @@ export const initRouter = (routesFile = "/config/routes.js") => {
   const routes = require(path.join(process.cwd(), routesFile));
 
   // Generate routes
-  const { generateRouter } = require("./routes.js");
+  const { generateRouter } = require("./routes");
   const generatedRouter = generateRouter(routes, controllersDir);
 
   // Add route to expresss

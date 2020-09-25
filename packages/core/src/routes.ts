@@ -41,10 +41,11 @@ export const generateRouter = (
       }
       // Try getting the controller file
       let controllerFile;
+      const controllerExt = process.env.PISTON_TS ? "ts" : "js";
       try {
         controllerFile = require(path.join(
           controllerDir,
-          `${controllerArray[0]}.controller.js`
+          `${controllerArray[0]}.controller.${controllerExt}`
         ));
 
         // Add route to the router

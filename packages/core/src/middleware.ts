@@ -17,10 +17,11 @@ export const generateMiddleware = (
 
   let middlewareFile: NodeRequire | any;
   let middlewareFn: Function | any;
+  const middlewareExt = process.env.PISTON_TS ? "ts" : "js";
   try {
     middlewareFile = require(path.join(
       middlewaresDir,
-      `${middlewareArray[0]}.middleware.js`
+      `${middlewareArray[0]}.middleware.${middlewareExt}`
     ));
 
     // Return middleware function

@@ -17,7 +17,7 @@ module.exports = () => {
   piston.initControllers("controllers/");
 
   // Init routes file
-  piston.initRouter("config/routes.js");
+  piston.initRouter("config/routes.ts");
 
   // Start piston
   piston.start();

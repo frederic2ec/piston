@@ -11,6 +11,7 @@ caporal
   .command("serve", "Start serving the Piston app")
   .option("--host <host>", "Bind the host to another address (optional)")
   .option("--port <port>", "Bind the port to another port (optional)")
+  .option("--typescript", "Specify if your project use typescript")
   .action((_, options: object, __) => {
     serve(options);
   });

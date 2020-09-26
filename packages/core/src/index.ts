@@ -18,37 +18,52 @@ let controllersDir: string;
 let middlewaresDir: string;
 
 // Initialze the app
-export const init = () => {
+const init = (
+  corsCfg = true,
+  bodyParserCfg = true,
+  morganCfg = true,
+  compressionCfg = true,
+  helmetCfg = true
+) => {
   // Initialize cors
-  app.use(cors());
+  if (corsCfg) {
+    app.use(cors());
+  }
 
   // Initialize body parser
-  app.use(bodyParser.urlencoded({ extended: true }));
-  app.use(bodyParser.json());
+  if (bodyParserCfg) {
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use(bodyParser.json());
+  }
 
   // Intialize morgan for logging
-  app.use(morgan("dev"));
+  if (morganCfg) {
+    app.use(morgan("dev"));
+  }
 
   // Initialize compression
-  app.use(compression());
+  if (compressionCfg) {
+    app.use(compression());
+  }
 
   // Initialize helmet
-  app.use(helmet());
+  if (helmetCfg) {
+    app.use(helmet());
+  }
 
   // Consola
   consola.info("Piston app initialize !");
 };
 
 // Initialize static direction
-export const initStatic = (staticDir = "/public") => {
-  const dir: string = path.join(process.cwd(), staticDir);
-  app.use(express.static(dir));
+const initStatic = (dir = "public/") => {
+  app.use(express.static(path.join(process.cwd(), dir)));
 
-  consola.info(`Static files directory initialized in : ${staticDir}`);
+  consola.info(`Static files directory initialized in : ${dir}`);
 };
 
 // Initialize view path
-export const initView = (viewDir = "/views", engine = "ejs") => {
+const initView = (viewDir = "/views", engine = "ejs") => {
   app.set("views", path.join(process.cwd(), viewDir));
 
   app.set("view engine", engine);
@@ -57,17 +72,17 @@ export const initView = (viewDir = "/views", engine = "ejs") => {
 };
 
 // Initialize the controller dir
-export const initControllers = (controllersDirectory = "/controllers") => {
+const initControllers = (controllersDirectory = "/controllers") => {
   controllersDir = path.join(process.cwd(), controllersDirectory);
 };
 
 // Initialize the middleware dir
-export const initMiddlewares = (middlewaresDirectory = "/middlewares") => {
+const initMiddlewares = (middlewaresDirectory = "/middlewares") => {
   middlewaresDir = path.join(process.cwd(), middlewaresDirectory);
 };
 
 // Initialize route file
-export const initRouter = (routesFile = "/config/routes.js") => {
+const initRouter = (routesFile = "/config/routes.js") => {
   // Require routes files
   const routes = require(path.join(process.cwd(), routesFile));
 
@@ -80,25 +95,6 @@ export const initRouter = (routesFile = "/config/routes.js") => {
   consola.info("Router ready !");
 };
 
-// Start the app
-export const start = (port = "3000", host = "127.0.0.1") => {
-  // Environment checker
-  const nodeEnv = process.env.NODE_ENV || "development";
-  if (nodeEnv !== "production" && process.env.PISTON_ENV !== "true") {
-    consola.warn(
-      `Piston is not running in production mode, it's recommended to use "piston serve"`
-    );
-  }
-  // Listen app
-  const listenPort = Number(process.env.PORT || port);
-  const listenHost = process.env.HOST || host;
-  app.listen(listenPort, listenHost, () => {
-    consola.success(
-      `Piston app listening at http://${listenHost}:${listenPort}`
-    );
-  });
-};
-
 // Middleware
 export const middleware = (middlewareName: string): Function => {
   const { generateMiddleware } = require("./middleware");
@@ -107,4 +103,46 @@ export const middleware = (middlewareName: string): Function => {
     middlewareName
   );
   return generatedMiddleware;
+};
+
+// Start the app
+export const start = (configFile = "config/application.js") => {
+  // Import the config file
+  let config;
+  try {
+    config = require(path.join(process.cwd(), configFile));
+  } catch {
+    config = undefined;
+  }
+
+  // Environment checker
+  const nodeEnv = process.env.NODE_ENV || "development";
+  if (nodeEnv !== "production" && process.env.PISTON_ENV !== "true") {
+    consola.warn(
+      `Piston is not running in production mode, it's recommended to use "piston serve"`
+    );
+  }
+
+  // Launch the different launch phase
+  init(
+    config?.app.cors,
+    config?.app.bodyParser,
+    config?.app.morgan,
+    config?.app.compression,
+    config?.app.helmet
+  );
+  initStatic(config?.static);
+  initView(config?.views.directory, config?.views.engine);
+  initMiddlewares(config?.middlewares);
+  initControllers(config?.controllers);
+  initRouter(config?.routes);
+
+  // Listen app
+  const listenPort = Number(process.env.PORT || config?.listen.port || "3000");
+  const listenHost = process.env.HOST || config?.listen.host || "127.0.1";
+  app.listen(listenPort, listenHost, () => {
+    consola.success(
+      `Piston app listening at http://${listenHost}:${listenPort}`
+    );
+  });
 };

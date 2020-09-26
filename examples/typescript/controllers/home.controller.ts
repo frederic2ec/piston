@@ -1,7 +1,10 @@
 import { middleware } from "@piston/core";
+import { model } from "@piston/database";
 
-export const Index = (_: any, res: any) => {
-  return res.render("index", { data: "test 124" });
+export const Index = async (_: any, res: any) => {
+  const data = await model("Cat").find({});
+
+  return res.render("index", { data });
 };
 
 export const Test = (_: any, res: any) => {

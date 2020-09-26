@@ -25,7 +25,7 @@ export default function (options: any): Function {
   const mainfile = ajson.main || "index.js";
 
   if (options.typescript) {
-    require("ts-node").register();
+    require("ts-node").register({ transpileOnly: true });
     return require(path.join(process.cwd(), mainfile))();
   }
 

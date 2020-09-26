@@ -122,7 +122,8 @@ export const start = (configFile = "config/application.js") => {
       `Piston is not running in production mode, it's recommended to use "piston serve"`
     );
   }
-
+  // Preflight
+  config?.preflight;
   // Launch the different launch phase
   init(
     config?.app.cors,

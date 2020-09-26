@@ -1,4 +1,7 @@
+import * as db from "@piston/database";
+
 module.exports = {
+  preflight: [db.initDB("config/database.ts")],
   listen: {
     // Configure the default host (default : 127.0.0.1)
     host: process.env.HOST || "127.0.0.1",

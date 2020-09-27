@@ -12,6 +12,7 @@ import * as bodyParser from "body-parser";
 import * as morgan from "morgan";
 import * as compression from "compression";
 import * as helmet from "helmet";
+import * as expressLayout from "express-ejs-layouts";
 
 // Global variables
 let controllersDir: string;
@@ -48,7 +49,11 @@ const init = (
 
   // Initialize helmet
   if (helmetCfg) {
-    app.use(helmet());
+    app.use(
+      helmet({
+        contentSecurityPolicy: false,
+      })
+    );
   }
 
   // Consola
@@ -67,6 +72,11 @@ const initView = (viewDir = "/views", engine = "ejs") => {
   app.set("views", path.join(process.cwd(), viewDir));
 
   app.set("view engine", engine);
+
+  if (engine === "ejs") {
+    app.use(expressLayout);
+    app.set("layout extractScripts", true);
+  }
 
   consola.info("Views ready !");
 };

@@ -1,9 +1,6 @@
 module.exports = {
   "get /": "Home/Index",
-  "get /test": "Home/Test",
-  "get /middleware": "Home/MiddlewarePage",
-  "/subrouter": {
-    "get /": "Subrouter/index",
-    "get /test": "Subrouter/test",
-  },
+  "delete /task/:id": "Home/DeleteTask",
+  "post /task/:id": "Home/UpdateTask",
+  "post /task/": "Home/CreateTask",
 };

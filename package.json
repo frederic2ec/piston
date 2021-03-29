@@ -3,5 +3,12 @@
   "private": true,
   "devDependencies": {
     "lerna": "^3.22.1"
-  }
+  },
+  "scripts": {
+    "postinstall": "lerna bootstrap"
+  },
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ]
 }

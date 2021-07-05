@@ -1,15 +1,12 @@
-import {Controller, Get, Json} from "@piston/core";
-import {getManager} from  "typeorm"
-import {UserModel} from "../models/user.model"
-
+import {Controller, Get, Json, Response, Request} from "@piston/core";
 
 @Controller()
 class AuthController {
-    @Get()
+    response: Response
+    request: Request
+
+    @Get("/")
     public async Index() {
-        console.log("wow")
-        console.log(await getManager().findOne(UserModel, 1))
-        // @ts-ignore
         return this.response.send('wow')
     }
 

@@ -1,13 +1,11 @@
 import {Controller, Get, Send, View, Response, Request} from "@piston/core"
 
-@Controller()
+@Controller("/")
 class HomeController {
-    // @ts-ignore
-    public response: Response
-    // @ts-ignore
-    public request: Request
+    response: Response
+    request: Request
 
-    @Get()
+    @Get("/")
     @Send()
     public Index() {
         return 'index home'
@@ -15,13 +13,12 @@ class HomeController {
 
     @Get()
     public Privacy() {
-        return this.response.send('hello world')
+        return this.response.send('hello world !')
     }
 
     @Get(":id")
     @View()
     public View() {
-        // @ts-ignore
         return {data: this.request.params.id}
     }
 }

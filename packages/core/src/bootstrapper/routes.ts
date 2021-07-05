@@ -44,7 +44,7 @@ class Routes {
                         case Action.SEND:
                             return res.send(classs[route.function]())
                         case Action.VIEW:
-                            return res.render(path.join(<string>controller.path, <string>route.function.toLocaleLowerCase()), classs[route.function]())
+                            return res.render(path.join(<string>controller.name.toLocaleLowerCase().replace('controller', ''), <string>route.function.toLocaleLowerCase()), classs[route.function]())
                         default:
                             return classs[route.function]()
                     }

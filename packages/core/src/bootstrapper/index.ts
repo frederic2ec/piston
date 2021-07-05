@@ -5,6 +5,7 @@ import cache from "../cache/controller"
 import {BootstrapperConfig} from "../types"
 import {Routes} from "./routes"
 import * as exphbs from "express-handlebars"
+import * as bodyParser from "body-parser";
 
 class Bootstrapper {
     #app: Express = express()
@@ -27,11 +28,15 @@ class Bootstrapper {
                 process.exit(1)
             }
         })
-
+        // Set support of JSON
+        this.#app.use(bodyParser.json());
+        this.#app.use(bodyParser.urlencoded({ extended: false }));
         // Set view engine
         this.#app.engine('handlebars', exphbs());
         this.#app.set('view engine', 'handlebars');
         this.#app.set('views', path.join(this.#root, "views"))
+        // Set static folder
+        this.#app.use('/static', express.static(path.join(this.#root, "static")))
         // Generate controller
         cache.generateController(this.#root)
         // Generate routes

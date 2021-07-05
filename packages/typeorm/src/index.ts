@@ -8,7 +8,7 @@ class TypeormModule {
     #config: TypeormConfig
     #entities = []
 
-    constructor(config?: TypeormConfig) {
+    constructor(config: TypeormConfig) {
         if(config) {
             this.#config = config
         }

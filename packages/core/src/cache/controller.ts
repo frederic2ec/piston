@@ -1,9 +1,9 @@
 import * as glob from "glob";
 import * as path from "path";
-import {Controller, Route} from "../types"
+import {ControllerCache as ControllerCacheType, RouteCache} from "../types"
 
 class ControllerCache {
-    #controllers: Controller[] = []
+    #controllers: ControllerCacheType[] = []
 
     private getController(name: string) {
         // @ts-ignore
@@ -28,11 +28,11 @@ class ControllerCache {
         return null
     }
 
-    private createController(controller: Controller) {
+    private createController(controller: ControllerCacheType) {
         this.#controllers.push(controller)
     }
 
-    public setControllerFile(controller: Controller) {
+    public setControllerFile(controller: ControllerCacheType) {
         const index = this.getController(controller.name)
         if (index !== null) {
             this.#controllers[index].file = controller.file
@@ -44,7 +44,7 @@ class ControllerCache {
         }
     }
 
-    public setRouteAction(route: Route) {
+    public setRouteAction(route: RouteCache) {
         const controllerIndex = this.getController(route.controller)
         const routeIndex = this.getRoute(route.controller, route.function)
         if(routeIndex !== null && controllerIndex !== null) {
@@ -55,7 +55,7 @@ class ControllerCache {
         }
     }
 
-    public setRouteMethod(route: Route) {
+    public setRouteMethod(route: RouteCache) {
         const controllerIndex = this.getController(route.controller)
         const routeIndex = this.getRoute(route.controller, route.function)
         if(routeIndex !== null && controllerIndex !== null) {
@@ -68,7 +68,7 @@ class ControllerCache {
         }
     }
 
-    public addController(controller: Controller) {
+    public addController(controller: ControllerCacheType) {
         const index = this.getController(controller.name)
         if (index !== null) {
             this.#controllers[index].path = controller.path
@@ -80,7 +80,7 @@ class ControllerCache {
         }
     }
 
-    public addRoute(route: Route) {
+    public addRoute(route: RouteCache) {
         const index = this.getController(route.controller)
         if(index !== null) {
             this.#controllers[index].routes?.push(route)
@@ -107,7 +107,7 @@ class ControllerCache {
 
                 this.setControllerFile({
                     // @ts-ignore
-                    name: classs[key].name,
+                    name: key,
                     file: controller
                 })
             })

@@ -12,7 +12,7 @@ export enum Action {
     SEND
 }
 
-export interface Route {
+export interface RouteCache {
     path?: string,
     method?: Method,
     function: string,
@@ -20,9 +20,9 @@ export interface Route {
     controller: string
 }
 
-export interface Controller {
+export interface ControllerCache {
     name: string,
     path?: string,
-    routes?: Route[],
+    routes?: RouteCache[],
     file?: string
 }

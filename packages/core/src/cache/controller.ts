@@ -1,30 +1,6 @@
-export enum Method {
-    GET,
-    POST,
-    PUT,
-    DELETE
-}
-
-enum Action {
-    JSON,
-    VIEW,
-    SEND
-}
-
-interface Route {
-    path?: string,
-    method: Method,
-    function: string,
-    action?: Action,
-    controller: string
-}
-
-interface Controller {
-    name: string,
-    path?: string,
-    routes?: Route[],
-    file?: string
-}
+import * as glob from "glob";
+import * as path from "path";
+import {Controller, Route} from "../types"
 
 class ControllerCache {
     #controllers: Controller[] = []
@@ -33,6 +9,19 @@ class ControllerCache {
         for (const [key, value] of Object.entries(this.#controllers)) {
             if(value.name === name) {
                 return parseInt(key)
+            }
+        }
+        return null
+    }
+
+    private getRoute(controllerName:string, routeName: string) {
+        const index = this.getController(controllerName)
+        if (index !== null) {
+            // @ts-ignore
+            for (const [key, value] of Object.entries(this.#controllers[index].routes)) {
+                if(value.function === routeName) {
+                    return parseInt(key)
+                }
             }
         }
         return null
@@ -51,6 +40,30 @@ class ControllerCache {
                 name: controller.name,
                 file: controller.file
             })
+        }
+    }
+
+    public setRouteAction(route: Route) {
+        const controllerIndex = this.getController(route.controller)
+        const routeIndex = this.getRoute(route.controller, route.function)
+        if(routeIndex !== null && controllerIndex !== null) {
+            // @ts-ignore
+            this.#controllers[controllerIndex].routes[routeIndex].action = route.action
+        } else {
+            this.addRoute(route)
+        }
+    }
+
+    public setRouteMethod(route: Route) {
+        const controllerIndex = this.getController(route.controller)
+        const routeIndex = this.getRoute(route.controller, route.function)
+        if(routeIndex !== null && controllerIndex !== null) {
+            // @ts-ignore
+            this.#controllers[controllerIndex].routes[routeIndex].method = route.method
+            // @ts-ignore
+            this.#controllers[controllerIndex].routes[routeIndex].path = route.path
+        } else {
+            this.addRoute(route)
         }
     }
 
@@ -79,8 +92,25 @@ class ControllerCache {
     }
 
     public getAllController() {
-        console.log(this.#controllers)
         return this.#controllers
+    }
+
+    public generateController(root: string) {
+        const controllers = glob.sync(path.join(root, "controllers", "*.controller.*"))
+        controllers.forEach(controller => {
+            const classs = require(controller) as object
+
+            Object.keys(classs).forEach(key => {
+                // @ts-ignore
+                new classs[key]()
+
+                this.setControllerFile({
+                    // @ts-ignore
+                    name: classs[key].name,
+                    file: controller
+                })
+            })
+        })
     }
 }
 

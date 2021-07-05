@@ -1,15 +1,15 @@
-import cache from "../cache/controller"
-import { Method } from "../cache/controller"
+import cache from "../../cache/controller"
+import { Method } from "../../types"
 
-const Get = (path?: string) => {
+const Patch = (path?: string) => {
     return function(controller: object, methodName: string, _: PropertyDescriptor) {
-        cache.addRoute({
+        cache.setRouteMethod({
             path: path || methodName.toLocaleLowerCase(),
             controller: controller.constructor.name,
             function: methodName,
-            method: Method.GET
+            method: Method.PATCH
         })
     }
 }
 
-export {Get}
+export {Patch}

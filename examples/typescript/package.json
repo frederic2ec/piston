@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "dev": "ts-node-dev index.ts"
+    "dev": "ts-node-dev src/index.ts",
+    "build": "rm -rf build && tsc",
+    "build:watch": "tsc --watch",
+    "start": "node build/index.js"
   },
   "keywords": [],
   "author": "",

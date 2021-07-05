@@ -21,6 +21,13 @@ class Bootstrapper {
         if (config?.host && !process.env.HOST) {
             this.#host = config.host
         }
+        config?.modules?.forEach(async module=> {
+            const result = await module.beforeBootstrap(this.#root)
+            if (!result) {
+                process.exit(1)
+            }
+        })
+
         // Set view engine
         this.#app.engine('handlebars', exphbs());
         this.#app.set('view engine', 'handlebars');
@@ -31,11 +38,13 @@ class Bootstrapper {
         const router = new Routes()
         router.generateRoutes()
         this.#app.use(router.getRouter())
+        // Launch app
+        this.listen()
     }
 
-    listen() {
+    private listen() {
         this.#app.listen(this.#port, this.#host, () => {
-            console.log(`Server launched on http://${this.#host}:${this.#port}`)
+            console.log(`Piston => Started at : http://${this.#host}:${this.#port}`)
         })
     }
 }

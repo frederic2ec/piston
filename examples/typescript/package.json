@@ -12,7 +12,11 @@
   "keywords": [],
   "author": "",
   "dependencies": {
-    "@piston/core": "*"
+    "@piston/core": "*",
+    "@piston/typeorm": "*",
+    "pg": "^8.6.0",
+    "reflect-metadata": "^0.1.13",
+    "typeorm": "^0.2.34"
   },
   "devDependencies": {
     "ts-node-dev": "^1.1.8",

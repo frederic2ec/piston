@@ -1,0 +1,40 @@
+{
+  "name": "@piston/typeorm",
+  "version": "0.0.0",
+  "description": "> TODO: description",
+  "author": "frederic2ec <freddy.cho@hotmail.com>",
+  "homepage": "https://github.com/frederic2ec/piston#readme",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/frederic2ec/piston.git"
+  },
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch"
+  },
+  "bugs": {
+    "url": "https://github.com/frederic2ec/piston/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^16.0.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  },
+  "peerDependencies": {
+    "@sap/hana-client": "^2.8.22",
+    "hdb-pool": "^0.1.6",
+    "mongodb": "^3.6.9",
+    "mssql": "^7.1.3",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.2.5",
+    "oracledb": "^5.2.0",
+    "pg": "^8.6.0",
+    "sql.js": "^1.5.0",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.34"
+  }
+}

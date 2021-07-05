@@ -6,6 +6,7 @@ class ControllerCache {
     #controllers: Controller[] = []
 
     private getController(name: string) {
+        // @ts-ignore
         for (const [key, value] of Object.entries(this.#controllers)) {
             if(value.name === name) {
                 return parseInt(key)
